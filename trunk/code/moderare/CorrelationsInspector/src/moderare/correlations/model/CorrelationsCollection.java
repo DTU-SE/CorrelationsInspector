@@ -1,0 +1,54 @@
+package moderare.correlations.model;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import moderare.correlations.config.MinSignificance;
+
+public class CorrelationsCollection extends HashMap<String, Dataset> {
+
+	private static final long serialVersionUID = -4538125166743883419L;
+	private List<String> toLoad = new LinkedList<String>();
+	
+	public CorrelationsCollection() {
+
+		toLoad.add("eindhoven");
+		toLoad.add("eyetracking-complex-cs");
+		toLoad.add("eyetracking-complex-ps");
+		toLoad.add("eyetracking-medium");
+		toLoad.add("eyetracking-simple");
+		toLoad.add("manuel");
+		toLoad.add("modelingstyles-task1");
+		toLoad.add("modelingstyles-task2");
+		toLoad.add("novicesexperts-experts");
+		toLoad.add("novicesexperts-novices");
+		
+		ClassLoader classLoader = CorrelationsCollection.class.getClassLoader();
+		for(String file : toLoad) {
+			try {
+				put(file, new Dataset(new File(classLoader.getResource("correlations/" + file).getFile())));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public Dataset getShared(Set<String> datasetNames) {
+		if (datasetNames == null || datasetNames.size() == 0) {
+			return null;
+		}
+		if (datasetNames.size() == 1) {
+			return get(datasetNames.iterator().next());
+		}
+		
+		Dataset toReturn = get(datasetNames.iterator().next());
+		for (String dataset : datasetNames) {
+			toReturn = Dataset.sharedSignificance(toReturn, get(dataset), MinSignificance.MIN_SIGNIFICANCE);
+		}
+		return toReturn;
+	}
+}
