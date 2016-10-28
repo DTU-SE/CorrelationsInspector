@@ -120,7 +120,7 @@ public class Dataset extends HashMap<Pair<String, String>, Correlation> {
 		for (int i = 0; i < matrix.length; i++) {
 			String[] line = matrix[i];
 			for (int j = 0; j < line.length; j++) {
-				out += (line[j] == null? "/":line[j]) + "\t";
+				out += (line[j] == null ? " " : line[j]) + "\t";
 			}
 			out += "\n";
 		}
