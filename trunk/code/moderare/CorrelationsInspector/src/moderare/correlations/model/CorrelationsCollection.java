@@ -27,6 +27,17 @@ public class CorrelationsCollection extends HashMap<String, Dataset> {
 		toLoad.add("novicesexperts-experts");
 		toLoad.add("novicesexperts-novices");
 		
+		toLoad.add("avg-eindhoven");
+		toLoad.add("avg-eyetracking-complex-cs");
+		toLoad.add("avg-eyetracking-complex-ps");
+		toLoad.add("avg-eyetracking-medium");
+		toLoad.add("avg-eyetracking-simple");
+		toLoad.add("avg-manuel");
+		toLoad.add("avg-modelingstyles-task1");
+		toLoad.add("avg-modelingstyles-task2");
+		toLoad.add("avg-novicesexperts-experts");
+		toLoad.add("avg-novicesexperts-novices");
+		
 		ClassLoader classLoader = CorrelationsCollection.class.getClassLoader();
 		for(String file : toLoad) {
 			try {
