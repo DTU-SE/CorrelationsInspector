@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
@@ -87,6 +88,26 @@ public class CorrelationsInspectorFrame extends JFrame {
 			columns.nextElement().setHeaderRenderer(headerRenderer);
 		}
 		table.setDefaultRenderer(Object.class, new ValueColorRenderer());
+		table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		table.getColumnModel().setColumnSelectionAllowed(true);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		for (int column = 0; column < 2; column++) {
+			TableColumn tableColumn = table.getColumnModel().getColumn(column);
+			int preferredWidth = tableColumn.getMinWidth();
+			int maxWidth = tableColumn.getMaxWidth();
+			for (int row = 0; row < table.getRowCount(); row++) {
+				TableCellRenderer cellRenderer = table.getCellRenderer(row, column);
+				Component c = table.prepareRenderer(cellRenderer, row, column);
+				int width = c.getPreferredSize().width + table.getIntercellSpacing().width;
+				preferredWidth = Math.max(preferredWidth, width);
+				// We've exceeded the maximum width, no need to check other rows
+				if (preferredWidth >= maxWidth) {
+					preferredWidth = maxWidth;
+					break;
+				}
+			}
+			tableColumn.setPreferredWidth(preferredWidth);
+		}
 		new ExcelAdapter(table);
 		
 		add(new JScrollPane(table), BorderLayout.CENTER);
