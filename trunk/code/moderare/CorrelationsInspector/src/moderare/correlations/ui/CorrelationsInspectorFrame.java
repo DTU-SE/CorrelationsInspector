@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
@@ -33,6 +34,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellEditor;
 import javax.swing.tree.TreeCellRenderer;
 
+import moderare.correlations.config.MinSignificance;
 import moderare.correlations.model.Correlation;
 import moderare.correlations.model.CorrelationsCollection;
 import moderare.correlations.model.Dataset;
@@ -54,7 +56,7 @@ public class CorrelationsInspectorFrame extends JFrame {
 	JTable table = null;
 	
 	public CorrelationsInspectorFrame() {
-		setLayout(new BorderLayout());
+		setLayout(new BorderLayout(5, 5));
 		
 		// list of datasets
 		datasetsList = new JTree() {
@@ -111,6 +113,14 @@ public class CorrelationsInspectorFrame extends JFrame {
 		new ExcelAdapter(table);
 		
 		add(new JScrollPane(table), BorderLayout.CENTER);
+		add(new JLabel("<html>"
+				+ "On the left side all datasets available (i.e., with behavioral/pragmatic correlations) are reported."
+				+ "The main table shows correlation, significance and number of samples for each combination.<br>"
+				+ "Significant correlations are highlighted, and the background color of significant correlations goes from red (-1) to white (0) to green (1) based on the actual correlation value.<br>"
+				+ "Selecting more than one dataset will show only the correlations that are significant (i.e., sig. value &le; " + MinSignificance.MIN_SIGNIFICANCE + ") for all datasets."
+						+ "The actually showed values are the averages among all datasets.<br>"
+				+ "It is possible to select cells and copy-paste them into Excel."
+				+ "</html>"), BorderLayout.SOUTH);
 	}
 	
 	

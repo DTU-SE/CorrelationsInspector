@@ -44,7 +44,9 @@ public class ValueColorRenderer implements TableCellRenderer {
 					c.setBackground(Color.white);
 				}
 				((JLabel) c).setHorizontalAlignment(JLabel.RIGHT);
-				((JLabel) c).setText(numberFormat.format(value));
+				if (value != null) {
+					((JLabel) c).setText(numberFormat.format(value));
+				}
 			} else {
 				reset(c);
 			}
