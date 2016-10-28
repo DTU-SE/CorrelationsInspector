@@ -1,7 +1,9 @@
 package moderare.correlations.model;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,10 +52,12 @@ public class Dataset extends HashMap<Pair<String, String>, Correlation> {
 		}
 	}
 	
-	public Dataset(File file) throws FileNotFoundException {
-		this.datasetName = file.getName();
+	public Dataset(String fileName) throws IOException {
+		InputStream resource = Dataset.class.getClassLoader().getResourceAsStream(fileName);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
+		this.datasetName = fileName;
 		Double[][] values = new Double[rows.size()*3][columns.size()];
-		Scanner input = new Scanner(file);
+		Scanner input = new Scanner(reader); //fileName);
 		int row = 0;
 		while(input.hasNext()) {
 			String nextLine = input.nextLine();
@@ -64,11 +68,10 @@ public class Dataset extends HashMap<Pair<String, String>, Correlation> {
 			row++;
 		}
 		input.close();
+		reader.close();
+		resource.close();
+		
 		load(values);
-	}
-	
-	public Dataset(String datasetName) {
-		this(datasetName, null);
 	}
 	
 	private void load(Double[][] values) {
@@ -128,7 +131,7 @@ public class Dataset extends HashMap<Pair<String, String>, Correlation> {
 	}
 	
 	public static Dataset sharedSignificance(Dataset d1, Dataset d2, double minSignificance) {
-		Dataset shared = new Dataset(d1.datasetName + " AND " + d2.datasetName);
+		Dataset shared = new Dataset(d1.datasetName + " AND " + d2.datasetName, null);
 		
 		for(String row : rows) {
 			for (String column : columns) {

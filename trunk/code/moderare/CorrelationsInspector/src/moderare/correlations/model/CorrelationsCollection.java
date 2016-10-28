@@ -1,7 +1,6 @@
 package moderare.correlations.model;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,11 +37,10 @@ public class CorrelationsCollection extends HashMap<String, Dataset> {
 		toLoad.add("avg-novicesexperts-experts");
 		toLoad.add("avg-novicesexperts-novices");
 		
-		ClassLoader classLoader = CorrelationsCollection.class.getClassLoader();
 		for(String file : toLoad) {
 			try {
-				put(file, new Dataset(new File(classLoader.getResource("correlations/" + file).getFile())));
-			} catch (FileNotFoundException e) {
+				put(file, new Dataset("correlations/" + file));
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
