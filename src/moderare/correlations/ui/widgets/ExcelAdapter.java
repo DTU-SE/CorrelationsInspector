@@ -90,10 +90,14 @@ public class ExcelAdapter implements ActionListener {
 			// export values
 			for (int i = 0; i < numrows; i++) {
 				for (int j = 0; j < numcols; j++) {
-					sbf.append(jTable1.getValueAt(rowsselected[i],
-							colsselected[j]));
-					if (j < numcols - 1)
+					Object value = jTable1.getValueAt(rowsselected[i], colsselected[j]);
+					if (value == null) {
+						value = "";
+					}
+					sbf.append(value);
+					if (j < numcols - 1) {
 						sbf.append("\t");
+					}
 				}
 				sbf.append("\n");
 			}
@@ -106,8 +110,7 @@ public class ExcelAdapter implements ActionListener {
 			int startRow = (jTable1.getSelectedRows())[0];
 			int startCol = (jTable1.getSelectedColumns())[0];
 			try {
-				String trstring = (String) (system.getContents(this)
-						.getTransferData(DataFlavor.stringFlavor));
+				String trstring = (String) (system.getContents(this).getTransferData(DataFlavor.stringFlavor));
 				System.out.println("String is:" + trstring);
 				StringTokenizer st1 = new StringTokenizer(trstring, "\n");
 				for (int i = 0; st1.hasMoreTokens(); i++) {
@@ -115,12 +118,10 @@ public class ExcelAdapter implements ActionListener {
 					StringTokenizer st2 = new StringTokenizer(rowstring, "\t");
 					for (int j = 0; st2.hasMoreTokens(); j++) {
 						value = (String) st2.nextToken();
-						if (startRow + i < jTable1.getRowCount()
-								&& startCol + j < jTable1.getColumnCount())
-							jTable1.setValueAt(value, startRow + i, startCol
-									+ j);
-						System.out.println("Putting " + value + "at row="
-								+ startRow + i + "column=" + startCol + j);
+						if (startRow + i < jTable1.getRowCount() && startCol + j < jTable1.getColumnCount()) {
+							jTable1.setValueAt(value, startRow + i, startCol + j);
+						}
+						System.out.println("Putting " + value + "at row=" + startRow + i + "column=" + startCol + j);
 					}
 				}
 			} catch (Exception ex) {

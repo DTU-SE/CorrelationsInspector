@@ -2,6 +2,7 @@ package moderare.correlations.model;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -54,10 +55,10 @@ public class CorrelationsCollection extends HashMap<String, Dataset> {
 			return get(datasetNames.iterator().next());
 		}
 		
-		Dataset toReturn = get(datasetNames.iterator().next());
+		Set<Dataset> datasets = new HashSet<Dataset>();
 		for (String dataset : datasetNames) {
-			toReturn = Dataset.sharedSignificance(toReturn, get(dataset), MinSignificance.MIN_SIGNIFICANCE);
+			datasets.add(get(dataset));
 		}
-		return toReturn;
+		return Dataset.sharedSignificance(datasets, MinSignificance.MIN_SIGNIFICANCE);
 	}
 }

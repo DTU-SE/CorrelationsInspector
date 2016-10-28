@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -57,7 +59,7 @@ public class Dataset extends HashMap<Pair<String, String>, Correlation> {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(resource));
 		this.datasetName = fileName;
 		Double[][] values = new Double[rows.size()*3][columns.size()];
-		Scanner input = new Scanner(reader); //fileName);
+		Scanner input = new Scanner(reader);
 		int row = 0;
 		while(input.hasNext()) {
 			String nextLine = input.nextLine();
@@ -130,25 +132,40 @@ public class Dataset extends HashMap<Pair<String, String>, Correlation> {
 		return out;
 	}
 	
-	public static Dataset sharedSignificance(Dataset d1, Dataset d2, double minSignificance) {
-		Dataset shared = new Dataset(d1.datasetName + " AND " + d2.datasetName, null);
-		
+	public static Dataset sharedSignificance(Collection<Dataset> datasets, double minSignificance) {
+		Dataset shared = new Dataset("shared", null);
 		for(String row : rows) {
 			for (String column : columns) {
+				double count = 0.0;
+				double sumCorrelation = 0.0;
+				double sumSignificance = 0.0;
+				double sumFrequency = 0.0;
 				Pair<String, String> pair = new Pair<String, String>(row, column);
-				Correlation c1 = d1.get(pair);
-				Correlation c2 = d2.get(pair);
-				
-				Correlation cs = new Correlation(null, null, null);
-				if (c1.getSignificance() != null && c1.getSignificance() <= minSignificance && c2.getSignificance() != null && c2.getSignificance() <= minSignificance) {
-					cs = new Correlation(
-							(c1.getCorrelation() + c2.getCorrelation()) / 2d,
-							(c1.getSignificance() + c2.getSignificance()) / 2d,
-							(c1.getFrequency() + c2.getFrequency()) / 2d);
+				for (Dataset d : datasets) {
+					Correlation c = d.get(pair);
+					if (c.getSignificance() != null && c.getSignificance() <= minSignificance) {
+						sumCorrelation += c.getCorrelation();
+						sumSignificance += c.getSignificance();
+						sumFrequency += c.getFrequency();
+						count++;
+					} else {
+						break;
+					}
 				}
-				shared.put(pair, cs);
+				if (count == datasets.size()) {
+					shared.put(pair, new Correlation(sumCorrelation / count, sumSignificance / count, sumFrequency / count));
+				} else {
+					shared.put(pair, new Correlation(null, null, null));
+				}
 			}
 		}
 		return shared;
+	}
+	
+	public static Dataset sharedSignificance(Dataset d1, Dataset d2, double minSignificance) {
+		Collection<Dataset> dataset = new HashSet<Dataset>();
+		dataset.add(d1);
+		dataset.add(d2);
+		return sharedSignificance(dataset, minSignificance);
 	}
 }
