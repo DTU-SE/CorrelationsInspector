@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
@@ -48,12 +49,13 @@ public class ValueColorRenderer implements TableCellRenderer {
 				reset(c);
 			}
 		} else {
-			if (isSelected) {
-				reset(c);
-				c.setBackground(Color.black);
-				c.setForeground(Color.white);
+			reset(c);
+		}
+		if (isSelected) {
+			if (c.getBackground().equals(Color.white)) {
+				c.setBackground(UIManager.getColor("Table.dropCellBackground"));
 			} else {
-				reset(c);
+				c.setBackground(c.getBackground().darker().darker().darker());
 			}
 		}
 		return c;
