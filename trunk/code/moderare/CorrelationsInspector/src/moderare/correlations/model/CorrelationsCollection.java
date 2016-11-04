@@ -16,17 +16,23 @@ public class CorrelationsCollection extends HashMap<String, Dataset> {
 	
 	public CorrelationsCollection() {
 
-		toLoad.add("eindhoven");
-		toLoad.add("eyetracking-complex-cs");
-		toLoad.add("eyetracking-complex-ps");
-		toLoad.add("eyetracking-medium");
-		toLoad.add("eyetracking-simple");
-		toLoad.add("manuel");
-		toLoad.add("modelingstyles-task1");
-		toLoad.add("modelingstyles-task2");
-		toLoad.add("novicesexperts-experts");
-		toLoad.add("novicesexperts-novices");
+		toLoad.add("final-all");
+		toLoad.add("final-all-novices");
+		toLoad.add("final-all-experts");
+		toLoad.add("final-eindhoven");
+		toLoad.add("final-eyetracking-complex-cs");
+		toLoad.add("final-eyetracking-complex-ps");
+		toLoad.add("final-eyetracking-medium");
+		toLoad.add("final-eyetracking-simple");
+		toLoad.add("final-manuel");
+		toLoad.add("final-modelingstyles-task1");
+		toLoad.add("final-modelingstyles-task2");
+		toLoad.add("final-novicesexperts-experts");
+		toLoad.add("final-novicesexperts-novices");
 		
+		toLoad.add("avg-all");
+		toLoad.add("avg-all-novices");
+		toLoad.add("avg-all-experts");
 		toLoad.add("avg-eindhoven");
 		toLoad.add("avg-eyetracking-complex-cs");
 		toLoad.add("avg-eyetracking-complex-ps");
@@ -40,6 +46,7 @@ public class CorrelationsCollection extends HashMap<String, Dataset> {
 		
 		for(String file : toLoad) {
 			try {
+				System.out.println(file);
 				put(file, new Dataset("correlations/" + file));
 			} catch (IOException e) {
 				e.printStackTrace();
