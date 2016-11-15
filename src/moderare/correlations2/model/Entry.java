@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Entry {
 
-	enum TYPE {
+	public enum TYPE {
 		STRING,
 		NUMERIC,
 	}
