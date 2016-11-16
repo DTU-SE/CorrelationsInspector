@@ -1,4 +1,4 @@
-package moderare.correlations2.ui;
+package moderare.correlations2.ui.tabs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
