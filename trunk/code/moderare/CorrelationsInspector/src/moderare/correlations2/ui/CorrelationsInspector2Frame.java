@@ -14,6 +14,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import moderare.correlations2.model.Dataset;
+import moderare.correlations2.ui.tabs.ClosableJTabbedPane;
 import moderare.correlations2.ui.tabs.CorrelationTab;
 import moderare.correlations2.ui.tabs.SummaryTab;
 
@@ -23,7 +24,7 @@ public class CorrelationsInspector2Frame extends JFrame {
 	
 	// gui objects
 	private JTextField filter = new JTextField();
-	private JTabbedPane tabs = new JTabbedPane();
+	private ClosableJTabbedPane tabs = new ClosableJTabbedPane();
 	
 	// logic objects
 	private Dataset original;

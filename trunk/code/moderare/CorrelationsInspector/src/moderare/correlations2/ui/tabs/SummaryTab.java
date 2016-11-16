@@ -1,7 +1,6 @@
 package moderare.correlations2.ui.tabs;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,8 +33,8 @@ public class SummaryTab extends JPanel {
 		Collections.sort(attributes);
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("<html>");
-		sb.append("<h2>Summary</h2>");
+		sb.append("<html><body style=\"font-family: sans-serif;\">");
+		sb.append("<h1>Summary</h1>");
 		sb.append("<p>Summary of all attributes (" + dataset.getAttributes().size() + " in total):");
 		sb.append("<ol>");
 		for(String attribute : attributes) {
@@ -53,7 +52,7 @@ public class SummaryTab extends JPanel {
 			sb.append("<li>" + attributeName + "</li>");
 		}
 		sb.append("</ol>");
-		sb.append("<h2>Attributes</h2>");
+		sb.append("<h1>Attributes</h1>");
 		for(String attribute : attributes) {
 			Set<Entry> values = dataset.getDistinctValues(attribute);
 			if (values.size() <= 20 && values.size() != 0 && values.iterator().next().getType() == TYPE.STRING) {
@@ -65,27 +64,26 @@ public class SummaryTab extends JPanel {
 				}
 				Collections.sort(valuesString);
 				
-				sb.append("<h3>" + attribute + "</h3>");
-				sb.append("<table border='1'>");
+				sb.append("<h2>" + attribute + "</h2>");
+				sb.append("<table border=\"1\" border-style=\"solid\">");
 				sb.append("<tr><th>#</th><th>Value</th><th>Frequency</th></tr>");
 				int i = 1;
 				for (String v : valuesString) {
 					sb.append("<tr>");
 					sb.append("<td align=\"right\">" + (i++) + "</td>");
-					sb.append("<td>" + v + "</td>");
+					sb.append("<td style=\"font-family: monospace;\">" + v + "</td>");
 					sb.append("<td align=\"right\">" + dataset.keepEqual(new Entry(attribute, v)).size() + "</td>");
 					sb.append("</tr>");
 				}
 				sb.append("</table>");
 			}
 		}
-		sb.append("</html>");
+		sb.append("</body></html>");
 		
 		setLayout(new BorderLayout());
 		description = new JTextPane();
 		description.setContentType("text/html");
 		description.setText(sb.toString());
-		description.setFont(description.getFont().deriveFont(Font.PLAIN));
 		description.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		add(new JScrollPane(description), BorderLayout.CENTER);
 	}
