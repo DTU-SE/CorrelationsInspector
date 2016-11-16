@@ -1,15 +1,15 @@
 package moderare.correlations2.calculators;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Collection;
 
 import moderare.correlations.model.Correlation;
 import moderare.correlations.utils.Pair;
 import moderare.correlations2.model.CorrelationsTable;
 import moderare.correlations2.model.Dataset;
 import moderare.correlations2.model.Entry;
-import moderare.correlations2.model.Record;
 import moderare.correlations2.model.Entry.TYPE;
+import moderare.correlations2.model.Record;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
@@ -23,7 +23,7 @@ public class CorrelationsComputer {
 		this.dataset = dataset;
 	}
 	
-	public CorrelationsTable getCorrelationTable(Set<String> set1, Set<String> set2) throws Exception {
+	public CorrelationsTable getCorrelationTable(Collection<String> set1, Collection<String> set2) throws Exception {
 		CorrelationsTable toReturn = new CorrelationsTable();
 		for (String attribute1 : set1) {
 			for (String attribute2 : set2) {
@@ -39,13 +39,19 @@ public class CorrelationsComputer {
 			Entry e1 = r.get(attribute1);
 			Entry e2 = r.get(attribute2);
 			
-			if (e1.getType() != TYPE.NUMERIC || e2.getType() != TYPE.NUMERIC) {
-				throw new Exception("Correlation between non-numeric variables!");
+			if (e1 != null && e2 != null) {
+				if (e1.getType() != TYPE.NUMERIC || e2.getType() != TYPE.NUMERIC) {
+					throw new Exception("Correlation between non-numeric variables!");
+				}
+				
+				if (e1.getValue() != null && e2.getValue() != null) {
+					values.add(new Pair<Double, Double>(e1.getValueNumeric(), e2.getValueNumeric()));
+				}
 			}
-			
-			if (e1.getValue() != null && e2.getValue() != null) {
-				values.add(new Pair<Double, Double>(e1.getValueNumeric(), e2.getValueNumeric()));
-			}
+		}
+		
+		if (values.size() == 0) {
+			return null;
 		}
 		
 		double[][] dataset = new double[values.size()][2];
