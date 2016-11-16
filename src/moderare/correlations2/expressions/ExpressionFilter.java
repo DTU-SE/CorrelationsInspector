@@ -11,6 +11,69 @@ import org.parboiled.support.Var;
 @BuildParseTree
 public class ExpressionFilter extends BaseParser<FormulaExpression> {
 
+	public enum CONJUCTION {
+		AND("AND");
+		
+		private final String text;
+		
+		private CONJUCTION(String text) {
+			this.text = text;
+		}
+		
+		@Override
+		public String toString() {
+			return text;
+		}
+		
+		public static CONJUCTION fromString(String text) {
+			if (text != null) {
+				for (CONJUCTION c : CONJUCTION.values()) {
+					if (c.text.toLowerCase().equals(text.toLowerCase())) {
+						return c;
+					}
+				}
+			}
+			return null;
+		}
+	}
+	
+	public enum OPERATOR {
+		EQUAL("="),
+		NOT_EQUAL("!=");
+		
+		private final String text;
+		
+		private OPERATOR(String text) {
+			this.text = text;
+		}
+		
+		@Override
+		public String toString() {
+			return text;
+		}
+		
+		public static OPERATOR fromString(String text) {
+			if (text != null) {
+				for (OPERATOR o : OPERATOR.values()) {
+					if (o.text.equals(text)) {
+						return o;
+					}
+				}
+			}
+			return null;
+		}
+	}
+	
+	public FormulaExpression parse(String formula) throws Exception {
+		ExpressionFilter parser = Parboiled.createParser(ExpressionFilter.class);
+		ParsingResult<FormulaExpression> result = new RecoveringParseRunner<FormulaExpression>(parser.Expression()).run(formula);
+		if (!result.hasErrors()) {
+			System.out.println(result.parseTreeRoot.getValue());
+			return result.parseTreeRoot.getValue();
+		}
+		throw new Exception(result.parseErrors.get(0).getErrorMessage());
+	}
+	
 	public Rule Expression() {
 		 Var<String> op = new Var<String>();
 		return Sequence(
@@ -18,7 +81,7 @@ public class ExpressionFilter extends BaseParser<FormulaExpression> {
 				ZeroOrMore(Sequence(
 						Conjunction(), op.set(match()),
 						Expression(),
-						swap() && push(new FormulaExpression(pop(), op.get(), pop())))),
+						swap() && push(new FormulaExpression(pop(), CONJUCTION.fromString(op.get().trim()), pop())))),
 				EOI);
 	}
 
@@ -33,7 +96,7 @@ public class ExpressionFilter extends BaseParser<FormulaExpression> {
 				FieldName(), op1.set(match()),
 				Operator(), op2.set(match()),
 				Value(),
-				push(new FormulaExpression(op1.get(), op2.get(), match())));
+				push(new FormulaExpression(op1.get(), OPERATOR.fromString(op2.get().trim()), match())));
 	}
 
 	public Rule FieldName() {
@@ -149,15 +212,15 @@ public class ExpressionFilter extends BaseParser<FormulaExpression> {
 	}
 
 	public Rule EQUAL() {
-		return ChWS('=');
+		return StringIgnoreCaseWS(OPERATOR.EQUAL.toString());
 	}
 
 	public Rule NOT_EQUAL() {
-		return StringIgnoreCaseWS("!=");
+		return StringIgnoreCaseWS(OPERATOR.NOT_EQUAL.toString());
 	}
 
 	public Rule AND() {
-		return StringIgnoreCaseWS("AND");
+		return StringIgnoreCaseWS(CONJUCTION.AND.toString());
 	}
 
 	public Rule PLUS() {
@@ -186,16 +249,5 @@ public class ExpressionFilter extends BaseParser<FormulaExpression> {
 	
 	public Rule EOL() {
 		return AnyOf("\n\r");
-	}
-
-	public static void main(String[] args) {
-		
-		String input = "test =1 and prova != \"wqrefwerf\" ";
-		ExpressionFilter parser = Parboiled.createParser(ExpressionFilter.class);
-		ParsingResult<FormulaExpression> result = new RecoveringParseRunner<FormulaExpression>(parser.Expression()).run(input);
-
-		if (!result.hasErrors()) {
-			System.out.println(result.parseTreeRoot.getValue());
-		}
 	}
 }
