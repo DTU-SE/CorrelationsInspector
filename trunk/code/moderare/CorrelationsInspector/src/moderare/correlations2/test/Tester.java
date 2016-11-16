@@ -27,7 +27,8 @@ public class Tester {
 		
 //		CorrelationsComputer cc = new CorrelationsComputer(d.filterAll(new Entry("expertise", "unfamiliar")));
 //		CorrelationsComputer cc = new CorrelationsComputer(d.keepDistinct(new Entry("expertise", "unfamiliar")));
-//		System.out.println(cc.getCorrelation("percent_acts_in_mixed_fragments_aligned", "sum_handles_free_choice"));
+		CorrelationsComputer cc = new CorrelationsComputer(d);
+		System.out.println(cc.getCorrelation("percent_acts_in_mixed_fragments_aligned", "sum_handles_free_choice"));
 	}
 
 }
