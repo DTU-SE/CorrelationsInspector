@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 
+import moderare.correlations.utils.TypeDetector.FIELD_TYPE;
+import moderare.correlations.utils.TypeDetector;
 import moderare.correlations.utils.UnicodeBOMInputStream;
 import moderare.correlations2.model.Dataset;
 import moderare.correlations2.model.Record;
@@ -21,11 +23,6 @@ import com.opencsv.CSVParser;
 
 public class CSVLoader {
 	
-	enum FIELD_TYPE {
-		DOUBLE,
-		STRING
-	}
-
 	private static final String[] CANDIDATE_FIELDS_SEPARATORS = {";", ",", "\t", "|"};
 	public static final int LINES_FOR_AUTO_DETECT = 100;
 	
@@ -125,7 +122,7 @@ public class CSVLoader {
 	private void detectHeaders() {
 		for(int i = 0; i < fieldsNumber; ++i) {
 			String value = CharMatcher.whitespace().trimFrom(fieldsLog.get(0).get(i));
-			if (getStringType(value) != FIELD_TYPE.STRING) {
+			if (TypeDetector.detectType(value) != FIELD_TYPE.STRING) {
 				return;
 			}
 		}
@@ -152,22 +149,9 @@ public class CSVLoader {
 				first = false;
 				continue;
 			}
-			t = getStringType(l.get(fieldNo));
+			t = TypeDetector.detectType(l.get(fieldNo));
 		}
 		return t;
-	}
-	
-	private FIELD_TYPE getStringType(String value) {
-		value = CharMatcher.whitespace().trimFrom(value);
-		try {
-			Integer.parseInt(value);
-			return FIELD_TYPE.DOUBLE;
-		} catch(NumberFormatException e) {}
-		try {
-			Double.parseDouble(value);
-			return FIELD_TYPE.DOUBLE;
-		} catch(NumberFormatException e) {}
-		return FIELD_TYPE.STRING;
 	}
 	
 	private boolean identifyFieldSeparator() {
