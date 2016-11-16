@@ -14,6 +14,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import moderare.correlations2.model.Dataset;
+import moderare.correlations2.ui.tabs.CorrelationTab;
+import moderare.correlations2.ui.tabs.SummaryTab;
 
 public class CorrelationsInspector2Frame extends JFrame {
 
@@ -67,7 +69,8 @@ public class CorrelationsInspector2Frame extends JFrame {
 		// tab panel
 		add(tabs, BorderLayout.CENTER);
 		
-		// show initial dataset
+		// show inital tabs
+		tabs.add("Dataset summary", new SummaryTab(original));
 		newFormula("");
 	}
 	

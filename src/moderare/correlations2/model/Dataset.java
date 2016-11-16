@@ -158,6 +158,10 @@ public class Dataset extends LinkedList<Record> {
 		return list;
 	}
 	
+	public Set<String> getAttributes() {
+		return columns;
+	}
+	
 	@Override
 	public boolean add(Record r) {
 		// add the record
