@@ -15,13 +15,18 @@ public class CorrelationsInspector {
 	
 	public static void main(String[] args) throws Exception {
 		
-		JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
-		fc.setDialogTitle("Select the CSV file with the observations");
-		fc.setFileFilter(new FileNameExtensionFilter("CSV file", "csv"));
-		if (fc.showOpenDialog(null) == JFileChooser.CANCEL_OPTION) {
-			return;
+		String datasetFile;
+		if (args.length == 1) {
+			datasetFile = args[0];
+		} else {
+			JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
+			fc.setDialogTitle("Select the CSV file with the observations");
+			fc.setFileFilter(new FileNameExtensionFilter("CSV file", "csv"));
+			if (fc.showOpenDialog(null) == JFileChooser.CANCEL_OPTION) {
+				return;
+			}
+			datasetFile = fc.getSelectedFile().getAbsolutePath();
 		}
-		String datasetFile = fc.getSelectedFile().getAbsolutePath();
 		
 		List<String> rows = new LinkedList<String>();
 		rows.add("no_Dead_transitions");
