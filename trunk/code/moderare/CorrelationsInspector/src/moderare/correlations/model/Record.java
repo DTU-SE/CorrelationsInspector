@@ -1,4 +1,4 @@
-package moderare.correlations2.model;
+package moderare.correlations.model;
 
 import java.util.HashSet;
 import java.util.Set;

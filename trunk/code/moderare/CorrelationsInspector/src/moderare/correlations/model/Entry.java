@@ -1,4 +1,4 @@
-package moderare.correlations2.model;
+package moderare.correlations.model;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 

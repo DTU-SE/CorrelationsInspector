@@ -1,4 +1,4 @@
-package moderare.correlations2.expressions;
+package moderare.correlations.expressions;
 
 import org.parboiled.BaseParser;
 import org.parboiled.Parboiled;

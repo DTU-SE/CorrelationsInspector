@@ -1,4 +1,4 @@
-package moderare.correlations2.ui.tabs;
+package moderare.correlations.ui.widgets.tabs;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-import moderare.correlations2.model.Dataset;
-import moderare.correlations2.model.Entry;
-import moderare.correlations2.model.Entry.TYPE;
+import moderare.correlations.model.Dataset;
+import moderare.correlations.model.Entry;
+import moderare.correlations.model.Entry.TYPE;
 
 public class SummaryTab extends JPanel {
 

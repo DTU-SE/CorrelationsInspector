@@ -1,4 +1,4 @@
-package moderare.correlations2.ui.tabs;
+package moderare.correlations.ui.widgets.tabs;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

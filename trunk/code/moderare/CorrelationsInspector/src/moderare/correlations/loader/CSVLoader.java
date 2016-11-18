@@ -1,4 +1,4 @@
-package moderare.correlations2.loader;
+package moderare.correlations.loader;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -10,11 +10,11 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 
+import moderare.correlations.model.Dataset;
+import moderare.correlations.model.Record;
 import moderare.correlations.utils.TypeDetector.FIELD_TYPE;
 import moderare.correlations.utils.TypeDetector;
 import moderare.correlations.utils.UnicodeBOMInputStream;
-import moderare.correlations2.model.Dataset;
-import moderare.correlations2.model.Record;
 
 import org.apache.commons.lang3.StringUtils;
 
