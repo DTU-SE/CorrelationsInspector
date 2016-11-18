@@ -15,7 +15,7 @@ public class CorrelationsInspector {
 	
 	public static void main(String[] args) throws Exception {
 		
-		JFileChooser fc = new JFileChooser();
+		JFileChooser fc = new JFileChooser(System.getProperty("user.dir"));
 		fc.setDialogTitle("Select the CSV file with the observations");
 		fc.setFileFilter(new FileNameExtensionFilter("CSV file", "csv"));
 		if (fc.showOpenDialog(null) == JFileChooser.CANCEL_OPTION) {
