@@ -1,10 +1,9 @@
-package moderare.correlations2.model;
+package moderare.correlations.model;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import moderare.correlations.model.Correlation;
 import moderare.correlations.utils.Pair;
 
 public class CorrelationsTable {

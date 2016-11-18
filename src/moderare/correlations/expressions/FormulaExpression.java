@@ -1,10 +1,10 @@
-package moderare.correlations2.expressions;
+package moderare.correlations.expressions;
 
+import moderare.correlations.expressions.ExpressionFilter.CONJUCTION;
+import moderare.correlations.expressions.ExpressionFilter.OPERATOR;
+import moderare.correlations.model.Entry;
 import moderare.correlations.utils.TypeDetector;
 import moderare.correlations.utils.TypeDetector.FIELD_TYPE;
-import moderare.correlations2.expressions.ExpressionFilter.CONJUCTION;
-import moderare.correlations2.expressions.ExpressionFilter.OPERATOR;
-import moderare.correlations2.model.Entry;
 
 import org.parboiled.trees.ImmutableBinaryTreeNode;
 

@@ -1,6 +1,6 @@
-package moderare.correlations2.loader;
+package moderare.correlations.loader;
 
-import moderare.correlations2.model.Dataset;
+import moderare.correlations.model.Dataset;
 
 public interface Loader {
 

@@ -1,4 +1,4 @@
-package moderare.correlations2.ui.tabs;
+package moderare.correlations.ui.widgets.tabs;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -13,13 +13,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import moderare.correlations.calculators.CorrelationsComputer;
 import moderare.correlations.model.Correlation;
+import moderare.correlations.model.CorrelationsTable;
+import moderare.correlations.model.Dataset;
 import moderare.correlations.ui.widgets.ExcelAdapter;
 import moderare.correlations.ui.widgets.ValueColorRenderer;
 import moderare.correlations.ui.widgets.VerticalTableHeaderCellRenderer;
-import moderare.correlations2.calculators.CorrelationsComputer;
-import moderare.correlations2.model.CorrelationsTable;
-import moderare.correlations2.model.Dataset;
 
 public class CorrelationTab extends JPanel {
 

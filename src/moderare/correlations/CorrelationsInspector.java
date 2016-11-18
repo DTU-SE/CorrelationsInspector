@@ -1,4 +1,4 @@
-package moderare.correlations2.app;
+package moderare.correlations;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -7,11 +7,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import moderare.correlations2.loader.CSVLoader;
-import moderare.correlations2.loader.Loader;
-import moderare.correlations2.ui.CorrelationsInspector2Frame;
+import moderare.correlations.loader.CSVLoader;
+import moderare.correlations.loader.Loader;
+import moderare.correlations.ui.CorrelationsInspectorFrame;
 
-public class CorrelationsInspector2 {
+public class CorrelationsInspector {
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -52,8 +52,8 @@ public class CorrelationsInspector2 {
 		
 		Loader l = new CSVLoader();
 		l.loadFile(datasetFile);
-		CorrelationsInspector2Frame frame = new CorrelationsInspector2Frame(l.exportDataset(), rows, columns);
-		frame.setDefaultCloseOperation(CorrelationsInspector2Frame.EXIT_ON_CLOSE);
+		CorrelationsInspectorFrame frame = new CorrelationsInspectorFrame(l.exportDataset(), rows, columns);
+		frame.setDefaultCloseOperation(CorrelationsInspectorFrame.EXIT_ON_CLOSE);
 		frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		frame.setSize(800, 800);
 		frame.setTitle("MODERARE - " + datasetFile);

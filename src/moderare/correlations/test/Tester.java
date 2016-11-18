@@ -1,9 +1,9 @@
-package moderare.correlations2.test;
+package moderare.correlations.test;
 
-import moderare.correlations2.calculators.CorrelationsComputer;
-import moderare.correlations2.loader.CSVLoader;
-import moderare.correlations2.model.Dataset;
-import moderare.correlations2.model.Entry;
+import moderare.correlations.calculators.CorrelationsComputer;
+import moderare.correlations.loader.CSVLoader;
+import moderare.correlations.model.Dataset;
+import moderare.correlations.model.Entry;
 
 public class Tester {
 

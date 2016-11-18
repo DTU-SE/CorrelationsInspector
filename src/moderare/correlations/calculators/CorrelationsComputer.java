@@ -1,15 +1,15 @@
-package moderare.correlations2.calculators;
+package moderare.correlations.calculators;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import moderare.correlations.model.Correlation;
+import moderare.correlations.model.CorrelationsTable;
+import moderare.correlations.model.Dataset;
+import moderare.correlations.model.Entry;
+import moderare.correlations.model.Record;
+import moderare.correlations.model.Entry.TYPE;
 import moderare.correlations.utils.Pair;
-import moderare.correlations2.model.CorrelationsTable;
-import moderare.correlations2.model.Dataset;
-import moderare.correlations2.model.Entry;
-import moderare.correlations2.model.Entry.TYPE;
-import moderare.correlations2.model.Record;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
