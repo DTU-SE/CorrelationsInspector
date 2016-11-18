@@ -97,7 +97,7 @@ public class CorrelationTab extends JPanel {
 		public Object getValueAt(int row, int col) {
 			if (col == 0) {
 				if ((row % 3) == 0) {
-					return rows.get((row - 1) / 3);
+					return rows.get(row / 3);
 				} else {
 					return "";
 				}
