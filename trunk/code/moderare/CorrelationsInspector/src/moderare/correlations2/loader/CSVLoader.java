@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.base.CharMatcher;
 import com.opencsv.CSVParser;
 
-public class CSVLoader {
+public class CSVLoader implements Loader {
 	
 	private static final String[] CANDIDATE_FIELDS_SEPARATORS = {";", ",", "\t", "|"};
 	public static final int LINES_FOR_AUTO_DETECT = 100;
@@ -36,10 +36,12 @@ public class CSVLoader {
 	private char fieldSeparator = '\0';
 	private CSVParser parser;
 	
-	public CSVLoader(String fileName) {
+	@Override
+	public void loadFile(String fileName) {
 		this.fileName = fileName;
 	}
 	
+	@Override
 	public Dataset exportDataset() throws Exception {
 		prepare();
 		

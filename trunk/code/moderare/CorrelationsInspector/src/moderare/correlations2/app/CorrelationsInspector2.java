@@ -3,16 +3,25 @@ package moderare.correlations2.app;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import moderare.correlations2.loader.CSVLoader;
+import moderare.correlations2.loader.Loader;
 import moderare.correlations2.ui.CorrelationsInspector2Frame;
 
 public class CorrelationsInspector2 {
 	
 	public static void main(String[] args) throws Exception {
 		
-		String datasetFile = "C:\\Users\\Andrea\\Desktop\\behavior-pragmatic.csv";
+		JFileChooser fc = new JFileChooser();
+		fc.setDialogTitle("Select the CSV file with the observations");
+		fc.setFileFilter(new FileNameExtensionFilter("CSV file", "csv"));
+		if (fc.showOpenDialog(null) == JFileChooser.CANCEL_OPTION) {
+			return;
+		}
+		String datasetFile = fc.getSelectedFile().getAbsolutePath();
 		
 		List<String> rows = new LinkedList<String>();
 		rows.add("no_Dead_transitions");
@@ -41,7 +50,9 @@ public class CorrelationsInspector2 {
 		columns.add("percent_orthogonal_segments");
 		columns.add("M_BP");
 		
-		CorrelationsInspector2Frame frame = new CorrelationsInspector2Frame(new CSVLoader(datasetFile).exportDataset(), rows, columns);
+		Loader l = new CSVLoader();
+		l.loadFile(datasetFile);
+		CorrelationsInspector2Frame frame = new CorrelationsInspector2Frame(l.exportDataset(), rows, columns);
 		frame.setDefaultCloseOperation(CorrelationsInspector2Frame.EXIT_ON_CLOSE);
 		frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		frame.setSize(800, 800);
