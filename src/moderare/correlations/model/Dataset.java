@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import moderare.correlations.expressions.ExpressionFilter;
-import moderare.correlations.expressions.FormulaExpression;
 import moderare.correlations.expressions.ExpressionFilter.OPERATOR;
+import moderare.correlations.expressions.FormulaExpression;
+import moderare.correlations.model.Entry.TYPE;
 
 public class Dataset extends LinkedList<Record> {
 
@@ -36,58 +37,22 @@ public class Dataset extends LinkedList<Record> {
 			Dataset right = filter(fe.right(), left);
 			return right;
 		} else {
-			OPERATOR op = fe.getOperator();
-			if (op == OPERATOR.EQUAL) {
-				return dataset.keepEqual(fe.getComparison());
-			} else if (op == OPERATOR.NOT_EQUAL) {
-				return dataset.keepDistinct(fe.getComparison());
-			}
+			return dataset.filter(fe.getOperator(), fe.getComparison());
 		}
-		return dataset;
 	}
 	
 	/**
-	 * Keeps only the items with a value, for the given variable name, equal to the value of the provided parameter.
+	 * Keeps only the items fulfilling the opeartor + comparison expression
 	 * 
+	 * @param operator
 	 * @param comparison
 	 * @return
 	 */
-	public Dataset keepEqual(Entry comparison) {
+	public Dataset filter(OPERATOR operator, Entry comparison) {
 		Dataset d = new Dataset();
 		for (Record r : this) {
-			Entry e = r.get(comparison.getName());
-			if (e != null) {
-				Object value = e.getValue();
-				boolean sameValue = value == null ? comparison.getValue() == null : value.equals(comparison.getValue());
-				if (sameValue) {
-					d.add(r);
-				}
-			}
-		}
-		return d;
-	}
-
-	/**
-	 * Keeps only the items with a value, for the given variable, different to the value of the provided parameter.
-	 * 
-	 * @param comparison
-	 * @return
-	 */
-	public Dataset keepDistinct(Entry comparison) {
-		Dataset d = new Dataset();
-		for (Record r : this) {
-			Entry e = r.get(comparison.getName());
-			boolean bothNull = e == null ? comparison == null : false;
-			if (!bothNull) {
-				if (e == null) {
-					d.add(r);
-				} else {
-					Object value = e.getValue();
-					boolean sameValue = value == null ? comparison.getValue() == null : value.equals(comparison.getValue());
-					if (!sameValue) {
-						d.add(r);
-					}
-				}
+			if (toKeep(operator, r.get(comparison.getName()), comparison)) {
+				d.add(r);
 			}
 		}
 		return d;
@@ -175,5 +140,68 @@ public class Dataset extends LinkedList<Record> {
 		}
 		
 		return toRet;
+	}
+	
+	private boolean toKeep(OPERATOR operator, Entry iterator, Entry reference) {
+		if (operator == OPERATOR.EQUAL) {
+			if (iterator == null && reference == null) {
+				return true;
+			} else {
+				Object value = iterator.getValue();
+				return value == null ? reference.getValue() == null : value.equals(reference.getValue());
+			}
+		} else if (operator == OPERATOR.NOT_EQUAL) {
+			if ((iterator == null && reference != null) || (iterator != null && reference == null)) {
+				return true;
+			}
+			Object value = iterator.getValue();
+			return value == null ? reference.getValue() != null : !value.equals(reference.getValue());
+		} else if (operator == OPERATOR.GREATER) {
+			if (iterator == null || reference == null) {
+				return false;
+			} else {
+				if (iterator.getType() == TYPE.NUMERIC && reference.getType() == TYPE.NUMERIC &&
+						iterator.getValue() != null && reference.getValue() != null) {
+					return iterator.getValueNumeric() > reference.getValueNumeric();
+				} else {
+					return false;
+				}
+			}
+		} else if (operator == OPERATOR.GREATER_EQUAL) {
+			if (iterator == null || reference == null) {
+				return false;
+			} else {
+				if (iterator.getType() == TYPE.NUMERIC && reference.getType() == TYPE.NUMERIC &&
+						iterator.getValue() != null && reference.getValue() != null) {
+					return iterator.getValueNumeric() >= reference.getValueNumeric();
+				} else {
+					return false;
+				}
+			}
+		} else if (operator == OPERATOR.LESS) {
+			if (iterator == null || reference == null) {
+				return false;
+			} else {
+				if (iterator.getType() == TYPE.NUMERIC && reference.getType() == TYPE.NUMERIC &&
+						iterator.getValue() != null && reference.getValue() != null) {
+					return iterator.getValueNumeric() < reference.getValueNumeric();
+				} else {
+					return false;
+				}
+			}
+		} else if (operator == OPERATOR.LESS_EQUAL) {
+			if (iterator == null || reference == null) {
+				return false;
+			} else {
+				if (iterator.getType() == TYPE.NUMERIC && reference.getType() == TYPE.NUMERIC &&
+						iterator.getValue() != null && reference.getValue() != null) {
+					return iterator.getValueNumeric() <= reference.getValueNumeric();
+				} else {
+					return false;
+				}
+			}
+		}
+		
+		return false;
 	}
 }
