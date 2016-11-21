@@ -39,7 +39,11 @@ public class ExpressionFilter extends BaseParser<FormulaExpression> {
 	
 	public enum OPERATOR {
 		EQUAL("="),
-		NOT_EQUAL("!=");
+		NOT_EQUAL("!="),
+		GREATER(">"),
+		GREATER_EQUAL(">="),
+		LESS("<"),
+		LESS_EQUAL("<=");
 		
 		private final String text;
 		
@@ -106,11 +110,11 @@ public class ExpressionFilter extends BaseParser<FormulaExpression> {
 	}
 
 	public Rule Operator() {
-		return FirstOf(EQUAL(), NOT_EQUAL());
+		return FirstOf(EQUAL(), NOT_EQUAL(), GREATER_EQUAL(), GREATER(), LESS_EQUAL(), LESS());
 	}
 
 	public Rule Value() {
-		return FirstOf(ValueString(), ValueNumber());
+		return FirstOf(ValueNumber(), ValueString());
 	}
 
 	public Rule ValueString() {
@@ -217,6 +221,22 @@ public class ExpressionFilter extends BaseParser<FormulaExpression> {
 
 	public Rule NOT_EQUAL() {
 		return StringIgnoreCaseWS(OPERATOR.NOT_EQUAL.toString());
+	}
+
+	public Rule GREATER() {
+		return StringIgnoreCaseWS(OPERATOR.GREATER.toString());
+	}
+
+	public Rule GREATER_EQUAL() {
+		return StringIgnoreCaseWS(OPERATOR.GREATER_EQUAL.toString());
+	}
+
+	public Rule LESS() {
+		return StringIgnoreCaseWS(OPERATOR.LESS.toString());
+	}
+
+	public Rule LESS_EQUAL() {
+		return StringIgnoreCaseWS(OPERATOR.LESS_EQUAL.toString());
 	}
 
 	public Rule AND() {

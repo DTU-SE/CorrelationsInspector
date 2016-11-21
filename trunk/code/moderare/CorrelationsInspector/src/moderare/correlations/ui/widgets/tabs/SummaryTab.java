@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
+import moderare.correlations.expressions.ExpressionFilter.OPERATOR;
 import moderare.correlations.model.Dataset;
 import moderare.correlations.model.Entry;
 import moderare.correlations.model.Entry.TYPE;
@@ -72,7 +73,7 @@ public class SummaryTab extends JPanel {
 					sb.append("<tr>");
 					sb.append("<td align=\"right\">" + (i++) + "</td>");
 					sb.append("<td style=\"font-family: monospace;\">" + v + "</td>");
-					sb.append("<td align=\"right\">" + dataset.keepEqual(new Entry(attribute, v)).size() + "</td>");
+					sb.append("<td align=\"right\">" + dataset.filter(OPERATOR.EQUAL, new Entry(attribute, v)).size() + "</td>");
 					sb.append("</tr>");
 				}
 				sb.append("</table>");
