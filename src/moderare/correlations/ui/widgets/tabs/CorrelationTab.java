@@ -33,14 +33,16 @@ public class CorrelationTab extends JPanel {
 	private List<String> rows;
 	private List<String> columns;
 	private CorrelationsTable correlationsTable;
+	private String formula;
 	
 	/**
 	 * 
 	 * @param dataset
 	 * @throws Exception 
 	 */
-	public CorrelationTab(Dataset dataset, List<String> rows, List<String> columns) throws Exception {
+	public CorrelationTab(String formula, Dataset dataset, List<String> rows, List<String> columns) throws Exception {
 //		this.dataset = dataset;
+		this.formula = formula;
 		this.rows = rows;
 		this.columns = columns;
 		
@@ -86,7 +88,10 @@ public class CorrelationTab extends JPanel {
 		setLayout(new BorderLayout());
 		add(new JScrollPane(table), BorderLayout.CENTER);
 	}
-
+	
+	public String getFormula() {
+		return formula;
+	}
 	
 	// support classes ---------------------------------------------------------
 	class CorrelationsTableModel extends DefaultTableModel {

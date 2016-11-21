@@ -1,6 +1,7 @@
 package moderare.correlations.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -11,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import moderare.correlations.model.Dataset;
 import moderare.correlations.ui.widgets.tabs.ClosableJTabbedPane;
@@ -66,6 +69,19 @@ public class CorrelationsInspectorFrame extends JFrame {
 		filterPanel.add(filter, BorderLayout.CENTER);
 		add(filterPanel, BorderLayout.NORTH);
 		
+		tabs.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				Component c = tabs.getSelectedComponent();
+				if (c instanceof CorrelationTab) {
+					String formula = ((CorrelationTab) c).getFormula();
+					if (!formula.isEmpty()) {
+						filter.setText(formula);
+					}
+				}
+			}
+		});
+		
 		// tab panel
 		add(tabs, BorderLayout.CENTER);
 		
@@ -86,7 +102,8 @@ public class CorrelationsInspectorFrame extends JFrame {
 				newDataset = original.filter(formula);
 				title = formula;
 			}
-			tabs.add(title, new CorrelationTab(newDataset, rows, columns));
+			title += " (" + newDataset.size() + " entries)";
+			tabs.add(title, new CorrelationTab(formula, newDataset, rows, columns));
 			tabs.setSelectedIndex(tabs.getTabCount() - 1);
 		} catch (Exception e) {
 			filter.selectAll();
