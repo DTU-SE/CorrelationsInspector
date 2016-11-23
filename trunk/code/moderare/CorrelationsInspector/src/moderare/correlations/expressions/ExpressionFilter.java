@@ -12,7 +12,7 @@ import org.parboiled.support.Var;
 public class ExpressionFilter extends BaseParser<FormulaExpression> {
 
 	public enum CONJUCTION {
-		AND("AND");
+		AND("&");
 		
 		private final String text;
 		
