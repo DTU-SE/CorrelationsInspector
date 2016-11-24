@@ -1,13 +1,17 @@
 package moderare.correlations.ui.widgets.tabs;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -21,15 +25,19 @@ import moderare.correlations.ui.widgets.ExcelAdapter;
 import moderare.correlations.ui.widgets.ValueColorRenderer;
 import moderare.correlations.ui.widgets.VerticalTableHeaderCellRenderer;
 
-public class CorrelationTab extends JPanel {
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+public class CorrelationTab extends JSplitPane {
 
 	private static final long serialVersionUID = 3864291727486660639L;
 	
 	// gui objects
+	private static final DecimalFormat myFormatter = new DecimalFormat("0.000");
 	private JTable table = null;
+	private JTextPane description = null;
 	
 	// logic objects
-//	private Dataset dataset;
+	private Dataset dataset;
 	private List<String> rows;
 	private List<String> columns;
 	private CorrelationsTable correlationsTable;
@@ -41,7 +49,14 @@ public class CorrelationTab extends JPanel {
 	 * @throws Exception 
 	 */
 	public CorrelationTab(String formula, Dataset dataset, List<String> rows, List<String> columns) throws Exception {
-//		this.dataset = dataset;
+		super(JSplitPane.HORIZONTAL_SPLIT,
+				new JScrollPane(new JTextPane()),
+				new JScrollPane(new JTable()));
+		
+		this.description = (JTextPane)  ((JScrollPane) getLeftComponent()).getViewport().getView();
+		this.table = (JTable) ((JScrollPane) getRightComponent()).getViewport().getView();
+		
+		this.dataset = dataset;
 		this.formula = formula;
 		this.rows = rows;
 		this.columns = columns;
@@ -50,13 +65,19 @@ public class CorrelationTab extends JPanel {
 		this.correlationsTable = cc.getCorrelationTable(rows, columns);
 		
 		init();
+		
+		setDividerLocation(0.0d);
+		getLeftComponent().setMinimumSize(new Dimension());
+		getRightComponent().setMinimumSize(new Dimension());
+		setOneTouchExpandable(true);
 	}
 
 	/**
 	 * 
 	 */
 	private void init() {
-		table = new JTable(new CorrelationsTableModel());
+		// table with correlations
+		table.setModel(new CorrelationsTableModel());
 		TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
 		Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
 		while (columns.hasMoreElements()) {
@@ -85,18 +106,59 @@ public class CorrelationTab extends JPanel {
 		}
 		new ExcelAdapter(table);
 		
-		setLayout(new BorderLayout());
-		add(new JScrollPane(table), BorderLayout.CENTER);
+		// description of attributes
+		List<String> attributes = new ArrayList<String>(dataset.getAttributes());
+		Collections.sort(attributes);
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<html><body style=\"font-family: sans-serif;\">");
+		sb.append("<h1>Stats</h1>");
+		sb.append("<table border=\"1\" border-style=\"solid\">");
+		sb.append("<tr><th>Attribute Name</th>"
+				+ "<th>N</th>"
+				+ "<th>Min</th>"
+				+ "<th>Max</th>"
+				+ "<th>Mean</th>"
+				+ "<th>Median</th>"
+				+ "<th>Std.Dev.</th>"
+				+ "</tr>");
+		for (String attribute : attributes) {
+			DescriptiveStatistics ds = dataset.getStatistics(attribute);
+			if (ds.getN() > 0) {
+				sb.append("<tr>");
+				sb.append("<td style=\"font-family: monospace;\">" + attribute + "</td>");
+				sb.append("<td align=\"right\">" + ds.getN() + "</td>");
+				sb.append("<td align=\"right\">" + myFormatter.format(ds.getMin()) + "</td>");
+				sb.append("<td align=\"right\">" + myFormatter.format(ds.getMax()) + "</td>");
+				sb.append("<td align=\"right\">" + myFormatter.format(ds.getMean()) + "</td>");
+				sb.append("<td align=\"right\">" + myFormatter.format(ds.getPercentile(50)) + "</td>");
+				sb.append("<td align=\"right\">" + myFormatter.format(ds.getStandardDeviation()) + "</td>");
+				sb.append("</tr>");
+			}
+		}
+		sb.append("</table>");
+		sb.append("</body></html>");
+		
+		description.setContentType("text/html");
+		description.setText(sb.toString());
+		description.setEditable(false);
 	}
 	
 	public String getFormula() {
 		return formula;
 	}
-	
+
 	// support classes ---------------------------------------------------------
 	class CorrelationsTableModel extends DefaultTableModel {
 	
 		private static final long serialVersionUID = -7118654969223960972L;
+		
+		public String getColumnName(int column) {
+			if (column < 2) {
+				return "";
+			}
+			return columns.get(column - 2);
+		}
 		
 		@Override
 		public Object getValueAt(int row, int col) {
@@ -142,12 +204,5 @@ public class CorrelationTab extends JPanel {
 		public int getColumnCount() {
 			return columns.size() + 2;
 		}
-		
-		public String getColumnName(int column) {
-			if (column < 2) {
-				return "";
-			}
-			return columns.get(column - 2);
-		};
-	};
+	}
 }

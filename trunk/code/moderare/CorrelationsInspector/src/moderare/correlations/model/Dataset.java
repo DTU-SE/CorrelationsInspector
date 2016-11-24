@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import moderare.correlations.expressions.ExpressionFilter;
 import moderare.correlations.expressions.ExpressionFilter.OPERATOR;
 import moderare.correlations.expressions.FormulaExpression;
@@ -127,6 +129,25 @@ public class Dataset extends LinkedList<Record> {
 		return columns;
 	}
 	
+	/**
+	 * Returns a {@link DescriptiveStatistics} object for the provided attribute
+	 * name. If the attribute refers to non {@link TYPE#NUMERIC}, then no entry
+	 * is added.
+	 * 
+	 * @param attributeName
+	 * @return the descriptive statistics object
+	 */
+	public DescriptiveStatistics getStatistics(String attributeName) {
+		DescriptiveStatistics ds = new DescriptiveStatistics();
+		for(Record r : this) {
+			Entry e = r.get(attributeName);
+			if (e != null && e.getType() == TYPE.NUMERIC && e.getValueNumeric() != null) {
+				ds.addValue(e.getValueNumeric());
+			}
+		}
+		return ds;
+	}
+	
 	@Override
 	public boolean add(Record r) {
 		// add the record
@@ -142,7 +163,18 @@ public class Dataset extends LinkedList<Record> {
 		return toRet;
 	}
 	
-	private boolean toKeep(OPERATOR operator, Entry iterator, Entry reference) {
+	/**
+	 * This method, given the parameters, determines if the current element
+	 * (<tt>iterator</tt>) is fulfilling the expression induced by
+	 * <tt>operator</tt> and <tt>reference</tt>.
+	 * 
+	 * @param operator the opeartor characterizing the expression
+	 * @param iterator the element iterating through the dataset
+	 * @param reference the reference element
+	 * @return <tt>true</tt> if the expression is fulfilled, <tt>false</tt>
+	 * otherwise
+	 */
+	private static boolean toKeep(OPERATOR operator, Entry iterator, Entry reference) {
 		if (operator == OPERATOR.EQUAL) {
 			if (iterator == null && reference == null) {
 				return true;

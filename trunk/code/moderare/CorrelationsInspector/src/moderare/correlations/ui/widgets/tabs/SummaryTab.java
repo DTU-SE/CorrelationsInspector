@@ -83,6 +83,7 @@ public class SummaryTab extends JPanel {
 		
 		setLayout(new BorderLayout());
 		description = new JTextPane();
+		description.setEditable(false);
 		description.setContentType("text/html");
 		description.setText(sb.toString());
 		description.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
