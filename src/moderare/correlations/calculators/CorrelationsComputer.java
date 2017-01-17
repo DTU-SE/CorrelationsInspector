@@ -17,23 +17,27 @@ import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
 
 public class CorrelationsComputer {
 
+	public enum CORRELATION_TYPE {
+		SPERMANS, PEARSONS
+	}
+	
 	private Dataset dataset;
 	
 	public CorrelationsComputer(Dataset dataset) {
 		this.dataset = dataset;
 	}
 	
-	public CorrelationsTable getCorrelationTable(Collection<String> set1, Collection<String> set2) throws Exception {
+	public CorrelationsTable getCorrelationTable(Collection<String> set1, Collection<String> set2, CORRELATION_TYPE type) throws Exception {
 		CorrelationsTable toReturn = new CorrelationsTable();
 		for (String attribute1 : set1) {
 			for (String attribute2 : set2) {
-				toReturn.add(attribute1, attribute2, getCorrelation(attribute1, attribute2));
+				toReturn.add(attribute1, attribute2, getCorrelation(attribute1, attribute2, type));
 			}
 		}
 		return toReturn;
 	}
 	
-	public Correlation getCorrelation(String attribute1, String attribute2) throws Exception {
+	public Correlation getCorrelation(String attribute1, String attribute2, CORRELATION_TYPE type) throws Exception {
 		ArrayList<Pair<Double, Double>> values = new ArrayList<Pair<Double, Double>>();
 		for (Record r : dataset) {
 			Entry e1 = r.get(attribute1);
@@ -61,7 +65,13 @@ public class CorrelationsComputer {
 		}
 		
 		Array2DRowRealMatrix m = new Array2DRowRealMatrix(dataset);
-		PearsonsCorrelation corr = new SpearmansCorrelation(m).getRankCorrelation();
+		
+		PearsonsCorrelation corr = null;
+		if (type == CORRELATION_TYPE.SPERMANS) {
+			corr = new SpearmansCorrelation(m).getRankCorrelation();
+		} else if (type == CORRELATION_TYPE.PEARSONS) {
+			corr = new PearsonsCorrelation(m);
+		}
 		
 		Double correlation = corr.getCorrelationMatrix().getEntry(0, 1);
 		Double significance = corr.getCorrelationPValues().getEntry(0, 1);

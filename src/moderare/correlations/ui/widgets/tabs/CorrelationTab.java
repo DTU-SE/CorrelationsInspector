@@ -18,6 +18,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import moderare.correlations.calculators.CorrelationsComputer;
+import moderare.correlations.calculators.CorrelationsComputer.CORRELATION_TYPE;
 import moderare.correlations.model.Correlation;
 import moderare.correlations.model.CorrelationsTable;
 import moderare.correlations.model.Dataset;
@@ -48,7 +49,7 @@ public class CorrelationTab extends JSplitPane {
 	 * @param dataset
 	 * @throws Exception 
 	 */
-	public CorrelationTab(String formula, Dataset dataset, List<String> rows, List<String> columns) throws Exception {
+	public CorrelationTab(String formula, Dataset dataset, List<String> rows, List<String> columns, CORRELATION_TYPE type) throws Exception {
 		super(JSplitPane.HORIZONTAL_SPLIT,
 				new JScrollPane(new JTextPane()),
 				new JScrollPane(new JTable()));
@@ -62,7 +63,7 @@ public class CorrelationTab extends JSplitPane {
 		this.columns = columns;
 		
 		CorrelationsComputer cc = new CorrelationsComputer(dataset);
-		this.correlationsTable = cc.getCorrelationTable(rows, columns);
+		this.correlationsTable = cc.getCorrelationTable(rows, columns, type);
 		
 		init();
 		
